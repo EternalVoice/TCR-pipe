@@ -1,0 +1,15 @@
+if(!requireNamespace("vegan")) install.packages("vegan")
+library(vegan)
+args <- commandArgs(T)
+
+# INPUT: ${sampleID}.all_CD3_AA.counts.percent.txt
+data <- read.csv(paste0("7.geneUsage/",args[1],".all_CDR3_AA.counts.percent.txt"),header=T,sep="\t")
+invsimpson <- diversity(data[,3], index = 'invsimpson')
+shannon <- diversity(data[,3], index = "shannon", base = 2)
+divers <- data.frame(sampleID = args[1], shannon, invsimpson)
+write.table(divers,file = paste0("8.diversity/",args[1],".diversity.reprot.all.aa"),col.names=T,row.names=F,sep="\t",quote=F)
+tmp1k <- head(data[,3], 1000)
+shannon <- diversity(tmp1k, index = "shannon", base = 2)
+invsimpson <- diversity(tmp1k, index = "invsimpson")
+divers2 <- data.frame(sampleID = args[1], shannon, invsimpson)
+write.table(divers2,file = paste0("8.diversity/",args[1],".diversity.reprot.top1000.aa"),col.names=T,row.names=F,sep="\t",quote=F)
